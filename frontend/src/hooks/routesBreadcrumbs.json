@@ -1,0 +1,14 @@
+[
+    {
+        "path": "/",
+        "name": "Trang chủ"
+    },
+    {
+        "path": "/course",
+        "name": "Môn học"
+    },
+    {
+        "path": "/course/create",
+        "name": "Tạo môn"
+    }
+]
