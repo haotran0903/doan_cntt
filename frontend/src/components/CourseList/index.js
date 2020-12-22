@@ -46,7 +46,7 @@ const CourseList = (props) => {
             course.bomon.includes(filter.bomon) &&
             course.phanloai.includes(filter.phanloai) &&
             course.sotinchi.toString().includes(filter.sotinchi) &&
-            course.chuandaura.includes(filter.cdio)
+            filter.cdio.split(' ').every(_cdio => course.chuandaura.includes(_cdio))
         ))
 
 
