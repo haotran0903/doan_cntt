@@ -45,8 +45,7 @@ function initModels(sequelize) {
   cdio.hasMany(chuandaura_cdio, { foreignKey: "ma_cdio" });
   chuandaura_cdio.belongsTo(chuandaura, { foreignKey: "ma_cdr" });
   chuandaura.hasMany(chuandaura_cdio, { as: "chuandaura_cdio", foreignKey: "ma_cdr" });
-  chuandaura_cdio.belongsTo(chuandaura, { foreignKey: "ma_monhoc" });
-  chuandaura.hasMany(chuandaura_cdio, { foreignKey: "ma_monhoc" });
+  chuandaura_cdio.belongsTo(chuandaura, { foreignKey: "ma_cdr" });
   danhgia.belongsTo(monhoc, { foreignKey: "ma_monhoc" });
   monhoc.hasMany(danhgia, { foreignKey: "ma_monhoc" });
   danhgia_chuandaura.belongsTo(chuandaura, { foreignKey: "ma_cdr" });

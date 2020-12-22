@@ -101,7 +101,7 @@ const Row = ({ row, mamh, setResponse }) => {
                     {row.mota}
                 </TableCell>
                 <TableCell align="center">
-                    {row.cdr_ctdt}
+                    {row.cdr_ctdt || "Không có"}
                 </TableCell>
                 <TableCell align='center' className="px-0">
                     <div className="action-button">

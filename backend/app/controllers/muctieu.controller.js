@@ -6,46 +6,40 @@ const chuandaura_cdio = Models.chuandaura_cdio
 const monhoc = Models.muctieu
 
 /* Lay thong tin muc tieu 1 mon hoc */
-exports.readAll = function (req, res) {
-    muctieu.findAll({
-        where: {
-            ma_monhoc: req.params.mamh
-        },
-        include: [{
-            model: chuandaura,
-            include: {
-                model: chuandaura_cdio,
-                as: "chuandaura_cdio",
-                order: [
-                    ['ma_cdr', 'ASC']
-                ],
-                where: {
-                    ma_monhoc: req.params.mamh
-                }
-            },
+exports.readAll = async function (req, res) {
+    try {
+        const muctieuData = await muctieu.findAll({
             where: {
                 ma_monhoc: req.params.mamh
-            },
-        }],
-        order: [
-            ['id', 'ASC'],
-            [chuandaura, 'id', 'ASC']
-        ]
-    })
-        .then(data => {
-            data = data.map(muctieu => {
-                const cdio = Array.from(new Set(muctieu.chuandauras.map(_cdr =>
-                    _cdr.chuandaura_cdio.map(_cdio =>
-                        _cdio.ma_cdio).join(' ')).join(' ').split(' '))).join(' ')
-                return {
-                    muctieu: muctieu.id,
-                    mota: muctieu.mota,
-                    cdr_ctdt: cdio
+            }
+        })
+        const data = await Promise.all(muctieuData.map(async (muctieu) => {
+            let cdr = await chuandaura.findAll({
+                include: {
+                    model: chuandaura_cdio,
+                    as: "chuandaura_cdio",
+                    where: {
+                        ma_monhoc: req.params.mamh
+                    }
+                },
+                where: {
+                    ma_monhoc: req.params.mamh,
+                    ma_muctieu: muctieu.id
                 }
             })
-            return res.status(200).send(data)
-        })
-        .catch(err => res.status(400).send(err))
+            return {
+                muctieu: muctieu.id,
+                mota: muctieu.mota,
+                cdr_ctdt: Array.from(new Set(cdr.map(
+                    _cdr => _cdr.chuandaura_cdio.map(
+                        _cdio => _cdio.ma_cdio).join(' ')).join(' ').split(' '))).sort().join(' ')
+            }
+        }))
+        return res.status(200).send(data)
+    }
+    catch (err) {
+        return res.status(500).send(err)
+    }
 }
 
 exports.readList = function (req, res) {
